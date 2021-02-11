@@ -1,0 +1,111 @@
+using System;
+using System.Windows.Forms;
+
+namespace PROGRAMMING_EXAM
+{
+    public partial class Form_Exam : Form
+    {
+        #region Constructor
+        public Form_Exam()
+        {
+            InitializeComponent();
+        }
+        #endregion
+
+        #region Event Handler Methods     
+        private void txtNumber1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+        private void txtNumber2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            ValidationForTextBox1();
+        }
+        #endregion
+
+        #region User Defined Methods
+
+        public void ValidationForTextBox1()
+        {
+            if (txtNumber1.Text == "" && txtNumber2.Text == "")
+            {
+                MessageBox.Show("No Number 1 And Number 2 Found!", "ATTENTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.ActiveControl = txtNumber1;
+            }
+            else
+            {
+                string valueOftextBox = txtNumber1.Text;
+                switch (valueOftextBox)
+                {
+                    case "":
+                        MessageBox.Show("No Number 1 Found!", "ATTENTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.ActiveControl = txtNumber1;
+                        break;
+                    default:
+                        ValidationTextBox2();
+                        break;
+                }
+            }
+        }
+        public void ValidationTextBox2()
+        {
+            string valueOftextBox = txtNumber2.Text;
+            switch (valueOftextBox)
+            {
+                case "":
+                    MessageBox.Show("No Number 2 Found!", "ATTENTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.ActiveControl = txtNumber2;
+                    break;
+                default:
+                    txtAnswer.Text = "";
+                    ComputeTheSum();
+                    this.ActiveControl = lblAnswer;
+                    break;
+            }
+        }
+     
+        public void ComputeTheSum()
+        {
+            string valueOfNumber1 = txtNumber1.Text.PadLeft(txtNumber1.MaxLength, '0');
+            string valueOfNumber2 = txtNumber2.Text.PadLeft(txtNumber2.MaxLength, '0');
+            int intervalCarry = 0;
+
+            for (int i = valueOfNumber1.Length - 1; i >= 0; i--)
+            {
+                int intervalNum1 = Convert.ToInt32(valueOfNumber1.Substring(i, 1));
+                int intervalNum2 = Convert.ToInt32(valueOfNumber2.Substring(i, 1));
+                int intervalAnswer = intervalNum1 + intervalNum2 + intervalCarry;
+
+                if (intervalAnswer > 9)
+                {
+                    intervalCarry = 1;
+                }
+                else
+                {
+                    txtAnswer.Text = intervalAnswer.ToString() + txtAnswer.Text;
+                    break;
+                }
+                txtAnswer.Text = (intervalAnswer - 10).ToString() + txtAnswer.Text;
+            }
+        }
+        #endregion
+    }
+}
